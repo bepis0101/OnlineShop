@@ -1,9 +1,7 @@
 const express = require('express')
 const app = express()
-var neo = require('neo4j-driver')
 const port = 8099
 const cookieParser = require('cookie-parser')
-// var driver = neo.driver()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.set('view engine', 'ejs')
@@ -21,3 +19,8 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login.ejs')
 })
+
+app.get('/register', (req, res) => {
+    res.render('register.ejs')
+})
+
