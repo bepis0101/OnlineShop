@@ -5,6 +5,11 @@ body {
     color: white;
 }
 
+.message {
+    color: red;
+    font-weight: bold;
+}
+
 .intro {
     background-color: rgba(0, 0, 32, 0.40);
     width: 20dvw;

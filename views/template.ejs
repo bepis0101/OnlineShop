@@ -9,6 +9,11 @@
 
 <div class="login">
     <a href="/cart"><img src="/images/cart.jpg" alt="Cart"></a>
+    <% if ( locals.user.guest == true) { %>
+        <a href="/login">Log In</a>
+    <% } else { %>
+        <a href="/logout">Log Out</a>
+<% } %>
 </div>
 
 <div class="intro">
