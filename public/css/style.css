@@ -30,7 +30,8 @@ body {
 
 .login {
     background-color: rgba(0, 0, 32, 0.40);
-    width: 20dvw;
+    height: 5dvh;
+    width: 10dvw;
     padding: 2dvh;
     padding-left: 4dvw;
     padding-right: 4dvw;
@@ -45,7 +46,15 @@ body {
     top: 5dvh;
     text-decoration: none;
     color: white;
-}   
+}
+.login img {
+    top: 0dvh;
+    height: 8dvh;
+    width: 8dvh;
+    position: absolute;
+    right: 3dvw;
+    background-color: rgba(0, 0, 32, 0.40);
+}
 .login a:visited {
     color: white;
 }
