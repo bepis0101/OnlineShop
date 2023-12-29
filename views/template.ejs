@@ -13,10 +13,14 @@
         <a href="/login">Log In</a>
     <% } else { %>
         <a href="/logout">Log Out</a>
-<% } %>
+    <% } %>
+    
 </div>
 
 <div class="intro">
     <h5>Welcome to this site of Star Wars merchendise</h5>
     <h6>The site is not official it's just a fan-made creation</h6>
+    <% if ( locals.user.admin ) { %>
+        <a href="/admin">Admin</a>
+    <% } %>
 </div>

@@ -42,11 +42,7 @@ app.listen(port, () => {
 });
 
 app.get('/', authorize, (req, res) => {
-    if ( req.user.admin) {
-        res.redirect('/admin')
-    } else {
-       res.render('index.ejs', { user: req.user })
-    }
+    res.render('index.ejs', { user: req.user })
 })
 
 app.get('/logout', authorize, (req, res) => {
