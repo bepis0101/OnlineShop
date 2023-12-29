@@ -4,7 +4,6 @@ const port = 8099
 const cookieParser = require('cookie-parser')
 const bcrypt = require('bcrypt')
 var mongo = require('mongodb')
-const { localsName } = require('ejs')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -38,20 +37,16 @@ function authorize(req, res, next) {
     }
 }
 
-function adminOnly(req, res, next) {
-    if ( req.user.admin ) {
-        next()
-    } else {
-        res.status(401).send('Not authorized')
-    }
-}
-
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 });
 
 app.get('/', authorize, (req, res) => {
-    res.render('index.ejs', { user: req.user })
+    if ( req.user.admin) {
+        res.redirect('/admin')
+    } else {
+       res.render('index.ejs', { user: req.user })
+    }
 })
 
 app.get('/logout', authorize, (req, res) => {
@@ -112,4 +107,8 @@ app.post('/register', authorize, async (req, res) => {
         console.log('Error')
         res.redirect('/register')
     }
+})
+
+app.get('/admin', authorize, (req, res) => {
+    res.render('admin.ejs', { user: req.user })
 })
