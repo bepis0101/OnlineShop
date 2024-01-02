@@ -80,20 +80,22 @@ app.post('/register', authorize, async (req, res) => {
         if ( ifUserExists.length ) {
             res.render('login', { message: 'Email already registered',
                                   user: req.user })
+        } else {
+            
+            const hashedPassword = await bcrypt.hash(req.body.password, 10)
+            const user = {
+                email: req.body.email,
+                password: hashedPassword,
+                admin: false,
+                guest: false
+            }
+            const newUser = await userSchema.create('users', user)
+            newUser.save()
+                .then(() => { console.log('User registered') })
+                .catch((err) => { console.log(err) })
+            res.render('login', { message: 'User registered',
+                                  user: req.user })
         }
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const user = {
-            email: req.body.email,
-            password: hashedPassword,
-            admin: false,
-            guest: false
-        }
-        const newUser = await userSchema.create('users', user)
-        newUser.save()
-            .then(() => { console.log('User registered') })
-            .catch((err) => { console.log(err) })
-        res.render('login', { message: 'User registered',
-                              user: req.user })
     } catch {
         console.log('Error')
         res.redirect('/register')
