@@ -5,6 +5,10 @@ body {
     color: white;
 }
 
+a:visited {
+    color: white;
+}
+
 .message {
     color: red;
     font-weight: bold;
@@ -85,7 +89,4 @@ body {
 }
 #login a {
     color: white;
-}
-#login a:visited {
-    color: purple;
 }
