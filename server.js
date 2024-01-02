@@ -3,7 +3,9 @@ const app = express()
 const port = 8099
 const cookieParser = require('cookie-parser')
 const bcrypt = require('bcrypt')
-var mongo = require('mongodb')
+var mongoose = require('mongoose')
+
+const { userSchema } = require('./mongoModels.js')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -11,20 +13,10 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(cookieParser('secret123789'))
 
-var users = [
-    {
-        email: 'admin@admin.com',
-        password: bcrypt.hashSync('admin', 10),
-        admin: true,
-        guest: false
-    },
-
-    {
-        email: 'a@b.com',
-        password: bcrypt.hashSync('Abc123?', 10),
-        guest: false
-    }
-]
+const uri = 'mongodb://localhost:27017/OnlineShopProject'
+mongoose.connect(uri)
+    .then(() => {console.log('Connected to MongoDB')})
+    .catch((err) => { console.log(err) })
 
 
 function authorize(req, res, next) {
@@ -57,9 +49,8 @@ app.get('/login', authorize, (req, res) => {
 app.post('/login', authorize, async (req, res) => {
     const email = req.body.email
     const password = req.body.password
-    const returnUrl = req.body.returnUrl
 
-    const user = users.find(user => user.email == email)
+    const user = await userSchema.findOne({ email: email }).exec()
 
     if ( user == null ) {
         res.render('login', { message: 'User not found',
@@ -84,10 +75,11 @@ app.get('/register', authorize, (req, res) => {
 })
 
 app.post('/register', authorize, async (req, res) => {
+    var ifUserExists = await userSchema.find().where('email').equals(req.body.email).exec()
     try {
-        if ( users.find(user => user.email == req.body.email) ) {
+        if ( ifUserExists.length ) {
             res.render('login', { message: 'Email already registered',
-                                      user: req.user })
+                                  user: req.user })
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const user = {
@@ -96,7 +88,10 @@ app.post('/register', authorize, async (req, res) => {
             admin: false,
             guest: false
         }
-        users.push(user)
+        const newUser = await userSchema.create('users', user)
+        newUser.save()
+            .then(() => { console.log('User registered') })
+            .catch((err) => { console.log(err) })
         res.render('login', { message: 'User registered',
                               user: req.user })
     } catch {
