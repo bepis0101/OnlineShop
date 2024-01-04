@@ -61,7 +61,7 @@ a:visited {
     color: white;
 }
 .login img {
-    top: 0dvh;
+    top: 0.5dvh;
     height: 8dvh;
     width: 8dvh;
     position: absolute;

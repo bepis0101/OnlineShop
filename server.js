@@ -89,15 +89,15 @@ app.post('/register', authorize, async (req, res) => {
                 admin: false,
                 guest: false
             }
-            const newUser = await userSchema.create('users', user)
+            const newUser = await userSchema.create(user)
             newUser.save()
                 .then(() => { console.log('User registered') })
                 .catch((err) => { console.log(err) })
             res.render('login', { message: 'User registered',
                                   user: req.user })
         }
-    } catch {
-        console.log('Error')
+    } catch(error) {
+        console.log(error)
         res.redirect('/register')
     }
 })

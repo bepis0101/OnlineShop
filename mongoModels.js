@@ -13,7 +13,8 @@ const userSchema = mongo.model(
         },
         admin: Boolean,
         guest: Boolean
-    }
+    },
+    'users'
 )
 
 module.exports = { userSchema };
