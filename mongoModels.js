@@ -17,4 +17,30 @@ const userSchema = mongo.model(
     'users'
 )
 
+const productModel = mongo.model(
+    'Product',
+    {
+        name: String,
+        price: Number,
+        description: String,
+        image: String,
+        numInStock: Number
+    },
+    'products'
+)
+
+const orderModel = mongo.model(
+    'Order',
+    {
+        userMail: String,
+        products: [{
+            _id: mongo.Types.ObjectId, 
+            quantity: Number
+            }],
+        total: Number,
+    }
+
+)
+
+
 module.exports = { userSchema };
