@@ -105,3 +105,9 @@ app.post('/register', authorize, async (req, res) => {
 app.get('/admin', authorize, (req, res) => {
     res.render('admin.ejs', { user: req.user })
 })
+
+app.get('/admin/users', authorize, async (req, res) => {
+    const users = await userSchema.find().exec()
+    res.render('users.ejs', { users: users,
+                              user: req.user })
+}) 
