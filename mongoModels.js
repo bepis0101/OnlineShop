@@ -1,6 +1,6 @@
 var mongo = require('mongoose')
 
-const userSchema = mongo.model(
+const userModel = mongo.model(
     'User',
     {
         email: {
@@ -33,14 +33,12 @@ const orderModel = mongo.model(
     'Order',
     {
         userMail: String,
-        products: [{
-            _id: mongo.Types.ObjectId, 
-            quantity: Number
-            }],
+        products: Array,
+        quantities: [Number],
         total: Number,
     }
 
 )
 
 
-module.exports = { userSchema };
+module.exports = { userModel, productModel, orderModel };

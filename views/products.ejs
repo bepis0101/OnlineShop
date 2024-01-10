@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+</head>
+<body>
+    <h1>Products</h1>
+    <a href="/admin/add/">Add new product</a>
+    <div>
+        <% for(const product of locals.products) { %>
+            <div>
+                <h2><%= product.name %></h2>
+                <p><%= product.description %></p>
+                <p><%= product.price %></p>
+                <p><%= product.numInStock %></p>
+                <a href="/admin/editprod/<%= product.id %>">Edit</a>
+                <a href="/admin/deleteprod/<%= product.id %>">Delete</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
