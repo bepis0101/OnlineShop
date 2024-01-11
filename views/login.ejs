@@ -16,6 +16,11 @@
                     <%= locals.message %>
                 </div>
             <% } %>
+            <% if( locals.success ) { %>
+                <div class="message1">
+                    <%= locals.success %>
+                </div>
+            <% } %>
             <input type="email" name="email" placeholder="Email" required="required"/><br>
             <input type="password" name="password" placeholder="Password" required="required" /><br>
             <button type="submit">Sign In</button><br>

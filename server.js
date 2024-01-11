@@ -93,7 +93,7 @@ app.post('/register', authorize, async (req, res) => {
             newUser.save()
                 .then(() => { console.log('User registered') })
                 .catch((err) => { console.log(err) })
-            res.render('login', { message: 'User registered',
+            res.render('login', { success: 'User registered',
                                   user: req.user })
         }
     } catch(error) {
