@@ -36,8 +36,8 @@ const orderModel = mongo.model(
         products: Array,
         quantities: [Number],
         total: Number,
-    }
-
+    },
+    'orders'
 )
 
 

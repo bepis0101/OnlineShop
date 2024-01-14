@@ -29,6 +29,16 @@ function authorize(req, res, next) {
     }
 }
 
+function onlyAdmin(req, res, next) {
+    if ( req.signedCookies.user && req.signedCookies.user.admin ) {
+        console.log('Admin')
+        next()
+    } else {
+        res.render('login', { message: 'You are not an admin' ,
+                              user: { guest: true }})
+    }
+}
+
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 });
@@ -102,32 +112,59 @@ app.post('/register', authorize, async (req, res) => {
     }
 })
 // admin
-app.get('/admin', authorize, (req, res) => {
+app.get('/admin', authorize, onlyAdmin, (req, res) => {
     res.render('admin.ejs', { user: req.user })
 })
 
 // admin/users
-app.get('/admin/users', async (req, res) => {
+app.get('/admin/users', onlyAdmin, async (req, res) => {
     const users = await userModel.find().exec()
     res.render('users.ejs', { users: users })
 })
 
+app.get('/admin/editUser/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    const user = await userModel.findById(id).exec()
+    res.render('edituser.ejs', { user: user })
+})
+
+app.post('/admin/editUser/:id', onlyAdmin, async (req, res) => {
+    if ( req.body.password ) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const user = {
+            email: req.body.email,
+            password: hashedPassword,
+            admin: false,
+            guest: false
+        }
+        await userModel.replaceOne({ _id: req.params.id }, user).exec()
+    }
+    res.redirect('/admin/users')
+})
+
+app.get('/admin/deleteUser/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    const user = await userModel.findByIdAndDelete(id).exec()
+    res.redirect('/admin/users')
+})
+
 // admin/products
-app.get('/admin/products', async (req, res) => {
+app.get('/admin/products', onlyAdmin, async (req, res) => {
     const products = await productModel.find().exec()
     res.render('products.ejs', { products: products })
 })
 
-app.get('/admin/products/add', (req, res) => {
-    res.render('addProduct.ejs')
+app.get('/admin/add', onlyAdmin, (req, res) => {
+    res.render('addProd.ejs')
 })
-app.post('/admin/products/add', async (req, res) => {
+
+app.post('/admin/add', onlyAdmin, async (req, res) => {
     const product = {
         name: req.body.name,
         price: req.body.price,
         description: req.body.description,
         image: req.body.image,
-        numInStock: req.body.numInStock
+        numInStock: req.body.nums
     }
 
     const newProduct = await productModel.create(product)
@@ -138,10 +175,33 @@ app.post('/admin/products/add', async (req, res) => {
     res.redirect('/admin/products')
 })
 
+app.get('/admin/deleteProd/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    const product = await productModel.findByIdAndDelete(id).exec()
+    res.redirect('/admin/products')
+})
 
+app.get('/admin/editProd/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    const product = await productModel.findById(id).exec()
+    res.render('editprod.ejs', { product: product })
+})
+
+app.post('/admin/editProd/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    const product = {
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+        image: req.body.image,
+        numInStock: req.body.nums
+    }
+    await productModel.replaceOne({ _id: id }, product).exec()
+    res.redirect('/admin/products')
+})
 
 // admin/orders
-app.get('/admin/orders', async (req, res) => {
+app.get('/admin/orders', onlyAdmin, async (req, res) => {
     const orders = await orderModel.find().exec()
     res.render('orders.ejs', { orders: orders })
 })

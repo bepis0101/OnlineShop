@@ -7,16 +7,19 @@
 </head>
 <body>
     <h1>Products</h1>
-    <a href="/admin/add/">Add new product</a>
+    <h3><a href="/admin/addProd/">Add new product</a></h3>
     <div>
         <% for(const product of locals.products) { %>
-            <div>
+            <div style="border: 1px solid;
+            border-color: black;
+            border-radius: 5px;
+            width: 30%;">
                 <h2><%= product.name %></h2>
                 <p><%= product.description %></p>
                 <p><%= product.price %></p>
                 <p><%= product.numInStock %></p>
-                <a href="/admin/editprod/<%= product.id %>">Edit</a>
-                <a href="/admin/deleteprod/<%= product.id %>">Delete</a>
+                <a href="/admin/editProd/<%= product.id %>">Edit</a>
+                <a href="/admin/deleteProd/<%= product.id %>">Delete</a>
             </div>
         <% } %>
     </div>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <ul>
+        <% users.forEach((user) => { %>
+            <% if( !user.admin ) { %>
+            <div style="border: 1px solid;
+            border-color: black;
+            border-radius: 5px;
+            width: 30%;">
+                <li><%= user.email %></li>
+                <a href="/admin/editUser/<%= user.id %>/">Edit</a>
+                <a href="/admin/deleteUser/<%= user.id %>/">Delete</a>
+            </div>
+            <% } %>
+        <% }); %>
+    </ul>
+</body>
+</html>

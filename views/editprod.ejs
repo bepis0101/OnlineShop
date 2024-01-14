@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit</title>
+</head>
+<body>
+    <form action="/admin/editProd/<%= locals.product.id %>" method="post">
+        <label for="name">Name of product</label>
+            <input type="text" name="name" id="name" required="required" value="<%= locals.product.name %>"><br>
+            <label for="price">Price</label>
+            <input type="number" name="price" id="price" inputmode="numeric" required="required" value="<%= locals.product.price %>"><br>
+            <label for="description">Description</label><br>
+            <textarea name="description" id="description" cols="30" rows="10"><%= locals.product.description %></textarea><br>
+            <label for="image">Image</label>
+            <input type="text" name="image" id="image" value="<%= locals.product.image %>"><br>
+            <label for="nums">Stock</label>
+            <input type="number" name="nums" id="nums" min="0" max="1000" value="<%= locals.product.numInStock %>">
+            <input type="submit" value="Edit product">
+    </form>
+</body>
+</html>

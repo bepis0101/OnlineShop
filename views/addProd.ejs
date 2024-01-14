@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add product</title>
+</head>
+<body>
+    <form action="/admin/add/" method="POST">
+        <label for="name">Name of product</label>
+        <input type="text" name="name" id="name" required="required"><br>
+        <label for="price">Price</label>
+        <input type="number" name="price" id="price" inputmode="numeric" required="required"><br>
+        <label for="description">Description</label><br>
+        <textarea name="description" id="description" cols="30" rows="10"></textarea><br>
+        <label for="image">Image</label>
+        <input type="text" name="image" id="image"><br>
+        <label for="nums">Stock</label>
+        <input type="number" name="nums" id="nums" min="0" max="1000" required="required">
+
+        <input type="submit" value="Add product">
+    </form>
+</body>
+</html>
