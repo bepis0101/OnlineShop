@@ -43,8 +43,52 @@ app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 });
 
-app.get('/', authorize, (req, res) => {
-    res.render('index.ejs', { user: req.user })
+app.get('/', authorize, async (req, res) => {
+    const products = await productModel.find().exec()
+    res.render('index.ejs', { products: products,
+                              user: req.user })
+})
+
+app.post('/addToCart', authorize, async (req, res) => {
+    var cart = req.cookies.cart
+    if ( !cart ) {
+        cart = [{
+                id: req.body.id,
+                quantity: req.body.quantity,
+            }]
+    } else {
+        var found = false
+        for( var prod of cart ) {
+            if ( prod.id == req.body.id ) {
+                prod.quantity = parseInt(prod.quantity) + parseInt(req.body.quantity)
+                found = true
+            }
+        }
+        if ( !found ) {
+            cart.push({
+                id: req.body.id,
+                quantity: req.body.quantity,
+            })
+        }
+    }
+    res.cookie('cart', cart)
+    console.log(req.cookies.cart)
+    res.redirect('/')
+})
+
+app.post('/search', authorize, async (req, res) => {
+    const pattern = req.body.search
+    var products = await productModel.find({ name: { $regex: pattern, $options: 'i' } }).exec()
+    if ( !products.length ) {
+        products = await productModel.find({ description: { $regex: pattern, $options: 'i' } }).exec()
+    }
+    res.render('index', { products: products, 
+                          user: req.user })
+})
+
+app.get('/cart', authorize, async (req, res) => {
+    var cart = req.cookies.cart;
+    res.render('cart', { cart: cart, user: req.user })
 })
 
 app.get('/logout', authorize, (req, res) => {

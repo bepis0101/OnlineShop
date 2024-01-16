@@ -92,3 +92,30 @@ a:visited {
     color: white;
 }
 
+#products {
+    position: absolute;
+    left: 30dvw;
+    top: 30dvh;
+}
+
+.product {
+    background-color: rgba(0, 0, 0, 0);
+    width: 20dvw;
+    height: 30dvh;
+    border: 1px solid white;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.product-info {
+    position: relative;
+    top: 20dvh;
+}
+
+.product img {
+    height: 18dvh;
+    width: 20dvh;
+    position: absolute;
+    left: calc(50% - 5dvw);
+}

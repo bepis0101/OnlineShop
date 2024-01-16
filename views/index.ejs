@@ -8,5 +8,20 @@
 </head>
 <body>
     <%- include('./template.ejs') %>
+    <div id="products">
+        <% for( const product of products) { %>
+            <div class="product">
+                <img src="/images/<%=product.image %>" alt="<%= product.image %>">
+                <div class="product-info">
+                    <%= product.name %> <br>
+                    $<%= product.price %> <br>
+                    <form action="/addToCart/" method="POST">
+                        <input type="hidden" name="id" value="<%= product.id %>">
+                        <input type="number" name="quantity" value="1" min="1" max="<%= product.numInStock %>">
+                        <input type="submit" value="Add to Cart">
+                </div>
+            </div>
+        <% } %>
+    </div>
 </body>
 </html>
