@@ -49,32 +49,14 @@ app.get('/', authorize, async (req, res) => {
                               user: req.user })
 })
 
-app.post('/addToCart/', authorize, async (req, res) => {
-    var cart = req.cookies.cart
-    console.log(cart)
-    if ( !cart ) {
-        cart = [{
-                id: req.body.id,
-                quantity: req.body.quantity,
-            }]
-    } else {
-        var found = false
-        for( var prod of cart ) {
-            if ( prod.id == req.body.id ) {
-                prod.quantity = parseInt(prod.quantity) + parseInt(req.body.quantity)
-                found = true
-            }
-        }
-        if ( !found ) {
-            cart.push({
-                id: req.body.id,
-                quantity: req.body.quantity,
-            })
-        }
-    }
-    res.cookie('cart', cart)
-    console.log(cart)
-    res.redirect('/')
+app.get('/product/:id', authorize, async (req, res) => {
+    const id = req.params.id;
+    const user = req.user
+    const prod = await productModel.findById(id).exec()
+    res.render('product.ejs', {
+        product: prod,
+        user: user
+    })
 })
 
 app.post('/search', authorize, async (req, res) => {
@@ -87,9 +69,37 @@ app.post('/search', authorize, async (req, res) => {
                           user: req.user })
 })
 
+app.post('/addToCart/', authorize, async (req, res) => {
+    const id = req.body.id
+    var cart = req.cookies.cart
+    if ( !cart ) {
+        cart = [{
+            id: id,
+            quantity: req.body.quantity
+        }]
+    } else {
+        var found = false
+        for( var prod of cart ) {
+            if ( prod.id == id ) {
+                prod.quantity = parseInt(prod.quantity) + parseInt(req.body.quantity)
+                found = true
+            }
+        }
+        if ( !found ) {
+            cart.push({
+                id: id,
+                quantity: req.body.quantity
+            })
+        }
+    }
+    res.cookie('cart', cart)
+    res.redirect('/')    
+})
+
 app.get('/cart', authorize, async (req, res) => {
     var cart = req.cookies.cart;
     if ( cart ) {
+        var total = 0
         for ( var prod of cart ) {
             var product = await productModel.findById(prod.id).exec()
             prod.name = product.name
@@ -101,10 +111,14 @@ app.get('/cart', authorize, async (req, res) => {
             if ( prod.quantity < 1 ) {
                 cart.splice(cart.indexOf(prod), 1)
             }
+
+            total += parseFloat(product.price) * parseInt(prod.quantity)
         }
+        console.log(`Total in GET: ${total}`)
+        res.render('cart', { cart: cart, user: req.user, total: total })
+    } else {
+        res.render('cart', { cart: [], user: req.user, total: 0 })
     }
-    res.render('cart', { cart: cart, user: req.user })
-    
 })
 
 app.get('/deletefromcart/:id', authorize, async (req, res) => {
@@ -132,6 +146,47 @@ app.get('/deletefromcartall/:id', authorize, async (req, res) => {
     }
     res.cookie('cart', cart)
     res.redirect('/cart')
+})
+
+app.post('/cart', authorize, async (req, res) => {
+    var cart = req.cookies.cart
+    console.log(cart)
+    if ( req.user.guest ) {
+        res.redirect('/login')
+    } else {
+        var total = 0
+        for( var prod of cart ) {
+            const product = await productModel.findById(prod.id).exec()
+            total += parseFloat(product.price) * parseInt(prod.quantity)
+        }
+        console.log(`Total in POST: ${total}`)
+        const order = {
+            userMail: req.user.email,
+            products: cart.map(prod => prod.id),
+            quantities: cart.map(prod => prod.quantity),
+            total: total,
+        }
+        const newOrder = await orderModel.create(order)
+        newOrder.save()
+            .then(() => { console.log('Order placed') })
+            .catch((err) => { console.log(err) })
+        
+        cart.forEach(async (prod) => {
+            const product = await productModel.findById(prod.id).exec()
+            product.numInStock = parseInt(product.numInStock) - parseInt(prod.quantity)
+            console.log(product.numInStock)
+            if ( product.numInStock < 1 ) {
+                await productModel.deleteOne({ _id: prod.id }).exec()
+            } else {
+                await productModel.findByIdAndUpdate(product.id, product).exec()
+                console.log(await productModel.findById(prod.id).exec())
+            }
+        })
+
+        res.cookie('cart', '', { maxAge: -1 })
+        res.redirect('/')
+    }
+    
 })
 
 app.get('/logout', authorize, (req, res) => {
@@ -291,4 +346,10 @@ app.post('/admin/editProd/:id', onlyAdmin, async (req, res) => {
 app.get('/admin/orders', onlyAdmin, async (req, res) => {
     const orders = await orderModel.find().exec()
     res.render('orders.ejs', { orders: orders })
+})
+
+app.get('/admin/deleteOrder/:id', onlyAdmin, async (req, res) => {
+    const id = req.params.id
+    await orderModel.findByIdAndDelete(id).exec()
+    res.redirect('/admin/orders')
 })

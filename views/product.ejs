@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.product.name %></title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <%- include('template.ejs') %>
+    <div class="product-card">
+        <img src="/images/<%= locals.product.image %>" alt="<%= locals.product.image %>">
+        <div class="product-info-card">
+            <h1><%= locals.product.name %></h1>
+            <p><%= locals.product.description %></p>
+            <p>$<%= locals.product.price %></p>
+            <form action="/addToCart" method="POST">
+                <input type="hidden" name="id" value="<%= locals.product.id %>">
+                <input type="number" name="quantity" value="1" min="1" max="<%= locals.product.numInStock %>">
+                <input type="submit" value="Add to Cart">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,18 +11,29 @@
     <div id="products">
         <% if( locals.cart ) { %>
         <% for(const product of locals.cart) { %>
-            <div class="product">
-                <img src="/images/<%= product.image %>" alt="<%= product.image %>">
-                <div class="product-info">
-                    <%= product.name %> <br>
-                    $<%= (product.price * product.quantity) %> <br>
-                    <%= product.quantity %> <br>
-                    <a href="/deletefromcart/<%= product.id %>">Delete One</a><span class="tab"></span>
-                    <a href="/deletefromcartall/<%= product.id %>">Delete All</a>
+            <li>
+                <div class="product">
+                    <img src="/images/<%= product.image %>" alt="<%= product.image %>">
+                    <div class="product-info">
+                        <%= product.name %> <br>
+                        $<%= (product.price * product.quantity) %> <br>
+                        <%= product.quantity %> <br>
+                        <a href="/deletefromcart/<%= product.id %>">Delete One</a><span class="tab"></span>
+                        <a href="/deletefromcartall/<%= product.id %>">Delete All</a>
+                    </div>
                 </div>
-            </div>
+        </li>
         <% } %>
         <% } %>
     </div>
+    <% if ( locals.cart && locals.cart.length > 0) { %>
+        <div id="total">
+            <h2>Total: $<%= locals.total %></h2>
+            <form action="/cart" method="post">
+                            <input type="hidden" value="<%= locals.cart %>">
+                <input type="submit" value="Checkout">
+            </form>
+        </div>
+    <% } %>
 </body>
 </html>

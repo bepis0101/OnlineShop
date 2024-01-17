@@ -111,6 +111,9 @@ a:visited {
 .product-info {
     position: relative;
     top: 20dvh;
+    color: white;
+    text-align: center;
+    text-decoration: none;
 }
 
 .product img {
@@ -120,12 +123,49 @@ a:visited {
     left: calc(50% - 5dvw);
 }
 
+#products a {
+    color: white;
+    text-decoration: none;
+}
+
 .product a {
     color: white;
+    text-decoration: none;
 }
 .product a:visited {
     color: white;
+    text-decoration: none;
 }
 .tab {
     margin: 3.6dvw;
+}
+
+.product-info-card {
+    position: relative;
+    top: 5dvh;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.product-card img {
+    height: 36dvh;
+    width: 40dvh;
+    position: absolute;
+    left: calc(50% - 10dvw);
+    top: 20dvh;
+
+}
+
+#total {
+    border: solid 1px white;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    position: absolute;
+    right: 5dvw;
+    top: 50%;
+    color: white;
+    text-align: center;
+    text-decoration: none;
 }
