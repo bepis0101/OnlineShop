@@ -8,6 +8,21 @@
 </head>
 <body>
     <%-include('template.ejs') %>
-    
+    <div id="products">
+        <% if( locals.cart ) { %>
+        <% for(const product of locals.cart) { %>
+            <div class="product">
+                <img src="/images/<%= product.image %>" alt="<%= product.image %>">
+                <div class="product-info">
+                    <%= product.name %> <br>
+                    $<%= (product.price * product.quantity) %> <br>
+                    <%= product.quantity %> <br>
+                    <a href="/deletefromcart/<%= product.id %>">Delete One</a><span class="tab"></span>
+                    <a href="/deletefromcartall/<%= product.id %>">Delete All</a>
+                </div>
+            </div>
+        <% } %>
+        <% } %>
+    </div>
 </body>
 </html>

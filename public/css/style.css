@@ -119,3 +119,13 @@ a:visited {
     position: absolute;
     left: calc(50% - 5dvw);
 }
+
+.product a {
+    color: white;
+}
+.product a:visited {
+    color: white;
+}
+.tab {
+    margin: 3.6dvw;
+}

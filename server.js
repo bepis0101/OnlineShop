@@ -49,8 +49,9 @@ app.get('/', authorize, async (req, res) => {
                               user: req.user })
 })
 
-app.post('/addToCart', authorize, async (req, res) => {
+app.post('/addToCart/', authorize, async (req, res) => {
     var cart = req.cookies.cart
+    console.log(cart)
     if ( !cart ) {
         cart = [{
                 id: req.body.id,
@@ -72,7 +73,7 @@ app.post('/addToCart', authorize, async (req, res) => {
         }
     }
     res.cookie('cart', cart)
-    console.log(req.cookies.cart)
+    console.log(cart)
     res.redirect('/')
 })
 
@@ -88,7 +89,49 @@ app.post('/search', authorize, async (req, res) => {
 
 app.get('/cart', authorize, async (req, res) => {
     var cart = req.cookies.cart;
+    if ( cart ) {
+        for ( var prod of cart ) {
+            var product = await productModel.findById(prod.id).exec()
+            prod.name = product.name
+            prod.price = product.price
+            prod.image = product.image
+            if ( prod.quantity > product.numInStock ) {
+                prod.quantity = parseInt(product.numInStock)
+            }
+            if ( prod.quantity < 1 ) {
+                cart.splice(cart.indexOf(prod), 1)
+            }
+        }
+    }
     res.render('cart', { cart: cart, user: req.user })
+    
+})
+
+app.get('/deletefromcart/:id', authorize, async (req, res) => {
+    var cart = req.cookies.cart
+    const id = req.params.id
+    for ( var prod of cart ) {
+        if ( prod.id == id ) {
+            prod.quantity = parseInt(prod.quantity) - 1
+            if( prod.quantity < 1 ) {
+                cart.splice(cart.indexOf(prod), 1)
+            }
+        }
+    }
+    res.cookie('cart', cart)
+    res.redirect('/cart')
+})
+
+app.get('/deletefromcartall/:id', authorize, async (req, res) => {
+    var cart = req.cookies.cart
+    const id = req.params.id
+    for ( var prod of cart ) {
+        if ( prod.id == id ) {
+            cart.splice(cart.indexOf(prod), 1)
+        }
+    }
+    res.cookie('cart', cart)
+    res.redirect('/cart')
 })
 
 app.get('/logout', authorize, (req, res) => {
