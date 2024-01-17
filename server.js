@@ -114,7 +114,6 @@ app.get('/cart', authorize, async (req, res) => {
 
             total += parseFloat(product.price) * parseInt(prod.quantity)
         }
-        console.log(`Total in GET: ${total}`)
         res.render('cart', { cart: cart, user: req.user, total: total })
     } else {
         res.render('cart', { cart: [], user: req.user, total: 0 })
@@ -150,7 +149,6 @@ app.get('/deletefromcartall/:id', authorize, async (req, res) => {
 
 app.post('/cart', authorize, async (req, res) => {
     var cart = req.cookies.cart
-    console.log(cart)
     if ( req.user.guest ) {
         res.redirect('/login')
     } else {
@@ -159,7 +157,6 @@ app.post('/cart', authorize, async (req, res) => {
             const product = await productModel.findById(prod.id).exec()
             total += parseFloat(product.price) * parseInt(prod.quantity)
         }
-        console.log(`Total in POST: ${total}`)
         const order = {
             userMail: req.user.email,
             products: cart.map(prod => prod.id),
@@ -174,12 +171,10 @@ app.post('/cart', authorize, async (req, res) => {
         cart.forEach(async (prod) => {
             const product = await productModel.findById(prod.id).exec()
             product.numInStock = parseInt(product.numInStock) - parseInt(prod.quantity)
-            console.log(product.numInStock)
             if ( product.numInStock < 1 ) {
                 await productModel.deleteOne({ _id: prod.id }).exec()
             } else {
                 await productModel.findByIdAndUpdate(product.id, product).exec()
-                console.log(await productModel.findById(prod.id).exec())
             }
         })
 
