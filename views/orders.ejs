@@ -8,23 +8,27 @@
 <body>
     <h1>Orders</h1>
     <ul>
-        <% orders.forEach((order) => { %>
+        <% for(let i = 0; i < locals.orders.length; i++) { %>
             <li>
             <div style="border: 1px solid;
             border-color: black;
             border-radius: 5px;
             width: 30%;">
                     <div>
-                        Order ID: <%= order.id %> <br>
-                        Total: <%= order.total %> <br>
+                        Order ID: <%= orders[i].id %> <br>
+                        Total: <%= orders[i].total %> <br>
                         products: <ol>
-                            
+                            <% products[i].forEach(product => { %>
+                                <li> 
+                                    <%= product.name %> 
+                                </li>                                    
+                            <% }); %>
                         </ol>
                     </div>
-                <a href="/admin/deleteOrder/<%= order.id %>/">Delete</a>
+                <a href="/admin/deleteOrder/<%= orders[i].id %>/">Delete</a>
             </div>
             </li>
-        <% }); %>
+        <% } %>
     </ul>
     <a href="/admin">Home Admin</a>
 </body>

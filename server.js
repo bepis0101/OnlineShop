@@ -340,7 +340,16 @@ app.post('/admin/editProd/:id', onlyAdmin, async (req, res) => {
 // admin/orders
 app.get('/admin/orders', onlyAdmin, async (req, res) => {
     const orders = await orderModel.find().exec()
-    res.render('orders.ejs', { orders: orders })
+    var products = []
+    for ( var order of orders ) {
+        var prod = []
+        for ( var id of order.products ) {
+            const product = await productModel.findById(id).exec()
+            prod.push(product)
+        }
+        products.push(prod)
+    }
+    res.render('orders.ejs', { orders: orders, products: products })
 })
 
 app.get('/admin/deleteOrder/:id', onlyAdmin, async (req, res) => {

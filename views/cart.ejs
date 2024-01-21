@@ -9,7 +9,7 @@
 <body>
     <%-include('template.ejs') %>
     <div id="products">
-        <% if( locals.cart ) { %>
+        <% if( locals.cart.length ) { %>
         <% for(const product of locals.cart) { %>
             <li>
                 <div class="product">
