@@ -9,18 +9,23 @@
 <body>
     <%- include('./template.ejs') %>
     <div id="products">
+        <% if( !locals.products.length ) { %>
+            <h1>No products found</h1>
+        <% } else { %> 
         <% locals.products.forEach(prod => { %>
             <a href="/product/<%= prod.id %>">
                 <div class="product">
                     <img src="/images/<%=prod.image %>" alt="<%= prod.image %>">
                     <div class="product-info">
                         <%= prod.name %> <br>
-                        $<%= prod.price %>
+                        $<%= prod.price %> <br>
+                        In stock: <%= prod.numInStock %>
                     </div>
                 </div>
             </a>
             
         <% }); %>
+        <% } %>
     </div>
 </body>
 </html>

@@ -164,8 +164,23 @@ a:visited {
     border-radius: 5px;
     position: absolute;
     right: 5dvw;
-    top: 50%;
+    top: 40%;
     color: white;
     text-align: center;
     text-decoration: none;
+    width: 10dvw;
+}
+
+#continue {
+    border: solid 1px white;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    position: absolute;
+    right: 5dvw;
+    top: 60%;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    width: 10dvw;
 }

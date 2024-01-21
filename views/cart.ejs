@@ -22,8 +22,10 @@
                         <a href="/deletefromcartall/<%= product.id %>">Delete All</a>
                     </div>
                 </div>
-        </li>
+            </li>
         <% } %>
+        <% } else { %>
+            <h1>No products in cart</h1>
         <% } %>
     </div>
     <% if ( locals.cart && locals.cart.length > 0) { %>
@@ -35,5 +37,10 @@
             </form>
         </div>
     <% } %>
+    <a href="/">
+        <div id="continue">
+            Continue shopping here
+        </div>
+    </a>
 </body>
 </html>
